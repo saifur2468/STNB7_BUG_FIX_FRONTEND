@@ -10,7 +10,9 @@ import {
     Video,
     Menu,
     X,
+    BookAIcon,
 } from "lucide-react";
+import label from "daisyui/components/label";
 
 export default function AdminSidebar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -49,6 +51,7 @@ export default function AdminSidebar() {
         { to: "/admin/assignments", label: "Assignments", Icon: ClipboardList, end: true },
         { to: "/admin/analytics", label: "Analytics", Icon: BarChart3, end: true },
         { to: "/admin/users", label: "Manage Users", Icon: Users, end: true },
+        { to: "/admin/courses", label: "Edit Course", Icon: BookAIcon, end: true }
     ];
 
     return (

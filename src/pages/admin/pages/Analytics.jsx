@@ -136,7 +136,7 @@ export default function Analytics() {
                                 <XAxis
                                     dataKey="courseName"
                                     tick={{ fontSize: 12 }}
-                                    angle={-45}
+                                    angle={-15}
                                     textAnchor="end"
                                     height={80}
                                 />
@@ -149,6 +149,13 @@ export default function Analytics() {
                     </div>
                 </div>
             )}
+
+
+
+
+
+
+
 
             {/* Additional Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
