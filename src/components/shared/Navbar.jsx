@@ -10,13 +10,15 @@ export default function Navbar() {
     const token = getToken();
     const [me, setMe] = useState(null);
 
-    const navLinkClass = ({ isActive, to }) =>
-        (isActive || window.location.pathname.startsWith("/"))
-            ? "text-primary font-semibold"
-            : "text-base-content/80 hover:text-primary";
+    // ✅ NavLink Class logic fixed
+    const navLinkClass = ({ isActive }) =>
+        isActive
+            ? "text-primary font-bold active"
+            : "text-base-content/80 hover:text-primary font-medium";
 
     const handleLogout = () => {
         clearToken();
+        localStorage.removeItem("dev_bypass");
         setMe(null);
         navigate("/");
         window.location.reload();
@@ -42,7 +44,7 @@ export default function Navbar() {
 
     return (
         <header className="sticky top-0 z-50 bg-base-100/90 backdrop-blur border-b border-base-300">
-            <div className="navbar max-w-6xl mx-auto px-2">
+            <div className="navbar max-w-6xl mx-auto px-3 sm:px-4">
 
                 {/* LEFT: Logo */}
                 <div className="navbar-start">
@@ -55,7 +57,7 @@ export default function Navbar() {
                         <li><NavLink className={navLinkClass} to="/">Home</NavLink></li>
                         <li><NavLink className={navLinkClass} to="/courses">Courses</NavLink></li>
 
-                        {/* ✅ Dashboard when logged in OR when dev_bypass is active */}
+                        {/* ✅ Dashboard when logged in OR dev_bypass */}
                         {(token && me) ? (
                             <li>
                                 <NavLink
@@ -74,9 +76,8 @@ export default function Navbar() {
                     </ul>
                 </div>
 
-                {/* RIGHT */}
+                {/* RIGHT: User Profile & Mobile Menu */}
                 <div className="navbar-end gap-2">
-                    {/* Theme Toggle */}
                     <ThemeToggle />
 
                     {/* Desktop buttons if NOT logged in */}
@@ -98,17 +99,16 @@ export default function Navbar() {
 
                             <ul
                                 tabIndex={0}
-                                className="dropdown-content mt-3 p-3 shadow bg-base-100 rounded-box w-60 border border-base-300"
+                                className="dropdown-content mt-3 p-3 shadow-xl bg-base-100 rounded-box w-60 border border-base-300 z-50"
                             >
                                 <div className="px-2 pb-2">
                                     <p className="font-semibold">{me.name}</p>
-                                    <p className="text-sm text-base-content/70">{me.email}</p>
-                                    <p className="text-xs badge badge-outline mt-2">{me.role}</p>
+                                    <p className="text-xs text-base-content/70 truncate">{me.email}</p>
+                                    <p className="text-xs badge badge-outline mt-1 capitalize">{me.role}</p>
                                 </div>
 
-                                <div className="my-2 border-t border-base-300" />
+                                <div className="my-1 border-t border-base-300" />
 
-                                {/* ✅ Dashboard inside dropdown only when logged in */}
                                 <li>
                                     <Link to={me.role === "admin" ? "/admin" : "/student"}>
                                         Dashboard
@@ -116,7 +116,7 @@ export default function Navbar() {
                                 </li>
                                 <li><Link to="/profile">Profile</Link></li>
                                 <li>
-                                    <button onClick={handleLogout} className="text-red-500">
+                                    <button onClick={handleLogout} className="text-error font-medium">
                                         Logout
                                     </button>
                                 </li>
@@ -124,7 +124,7 @@ export default function Navbar() {
                         </div>
                     )}
 
-                    {/* Mobile hamburger */}
+                    {/* 📱 Mobile Hamburger Menu (Fixes Applied) */}
                     <div className="dropdown dropdown-end md:hidden">
                         <label tabIndex={0} className="btn btn-ghost btn-circle">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
@@ -137,59 +137,62 @@ export default function Navbar() {
                         <ul
                             tabIndex={0}
                             className="
-                menu menu-sm dropdown-content mt-3 p-3 shadow
-                bg-base-100 rounded-box w-56 border border-base-300
-                items-center text-center max-h-32 overflow-hidden
-              "
+                                menu menu-sm dropdown-content mt-3 p-4 shadow-2xl
+                                bg-base-100 rounded-box w-64 border border-base-300
+                                z-50 max-h-[85vh] overflow-y-auto space-y-1
+                            "
                         >
+                            {/* User Info header on Mobile if logged in */}
+                            {token && me && (
+                                <div className="flex flex-col items-center gap-1 pb-3 mb-2 border-b border-base-300">
+                                    <div className="w-11 h-11 rounded-full bg-primary text-primary-content flex items-center justify-center font-bold text-sm">
+                                        {initials}
+                                    </div>
+                                    <p className="font-semibold text-sm mt-1">{me?.name}</p>
+                                    <p className="text-xs text-base-content/70 truncate max-w-[180px]">{me?.email}</p>
+                                    <span className="badge badge-xs badge-outline capitalize">{me?.role}</span>
+                                </div>
+                            )}
+
                             <li><NavLink className={navLinkClass} to="/">Home</NavLink></li>
                             <li><NavLink className={navLinkClass} to="/courses">Courses</NavLink></li>
 
-                            {/* ✅ Dashboard only when logged in */}
+                            {/* Mobile Dashboard link when logged in */}
                             {token && me && (
                                 <li>
                                     <NavLink
                                         className={navLinkClass}
-                                        to={me.role === "admin" ? "/admin" : "/student"}
+                                        to={me?.role === "admin" ? "/admin" : "/student"}
                                     >
                                         Dashboard
                                     </NavLink>
                                 </li>
                             )}
 
-                            <div className="my-2 w-full border-t border-base-300" />
+                            {/* Dev Bypass Links for Mobile */}
+                            {(!token && localStorage.getItem("dev_bypass") === "true") && (
+                                <>
+                                    <li><NavLink className={navLinkClass} to="/student">Student Portal</NavLink></li>
+                                    <li><NavLink className={navLinkClass} to="/admin">Admin Portal</NavLink></li>
+                                </>
+                            )}
+
+                            <div className="my-2 border-t border-base-300" />
 
                             {!token ? (
-                                <>
-                                    <li className="w-full">
-                                        <Link to="/login" className="btn btn-ghost btn-sm w-full">Login</Link>
-                                    </li>
-                                    <li className="w-full">
-                                        <Link to="/register" className="btn btn-primary btn-sm w-full">Enroll Now</Link>
-                                    </li>
-                                </>
+                                <div className="flex flex-col gap-2 pt-1">
+                                    <Link to="/login" className="btn btn-ghost btn-sm w-full">
+                                        Login
+                                    </Link>
+                                    <Link to="/register" className="btn btn-primary btn-sm w-full">
+                                        Enroll Now
+                                    </Link>
+                                </div>
                             ) : (
                                 <>
-                                    <div className="flex flex-col items-center gap-2 py-2">
-                                        <div className="w-12 h-12 rounded-full bg-primary text-primary-content flex items-center justify-center font-bold">
-                                            {initials}
-                                        </div>
-                                        <p className="font-semibold">{me?.name}</p>
-                                        <p className="text-xs text-base-content/70">{me?.email}</p>
-                                    </div>
-
-                                    <div className="my-2 w-full border-t border-base-300" />
-
-                                    {/* ✅ Dashboard only when logged in */}
-                                    <li className="w-full">
-                                        <Link to={me?.role === "admin" ? "/admin" : "/student"} className="w-full">
-                                            Dashboard
-                                        </Link>
-                                    </li>
-
-                                    <li className="w-full"><Link to="/profile">Profile</Link></li>
-                                    <li className="w-full">
-                                        <button onClick={handleLogout} className="btn btn-ghost btn-sm w-full text-red-500">
+                                    <li><Link to="/profile">Profile</Link></li>
+                                    <li>
+                                        <button onClick={handleLogout} className="btn btn-error btn-outline btn-sm w-full mt-2 text-error">
                                             Logout
                                         </button>
                                     </li>
