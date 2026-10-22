@@ -169,7 +169,7 @@ export default function StudentDashboard() {
                 </div>
             )}
 
-            {enrollments.length === 0 ? (
+            {(!enrollments || enrollments.length === 0) ? (
                 <div className="card bg-base-200">
                     <div className="card-body text-center py-12">
                         <h2 className="card-title justify-center">No courses enrolled yet</h2>

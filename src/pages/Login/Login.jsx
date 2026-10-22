@@ -15,8 +15,48 @@ export default function Login() {
     const handleChange = (e) =>
         setForm({ ...form, [e.target.name]: e.target.value });
 
-    const handleQuickLogin = (email, password) => {
-        setForm({ email, password });
+    // ✅ Quick Admin Login Handler
+    const handleQuickAdminLogin = async () => {
+        const payload = { email: "admin@coursemaster.com", password: "admin123" };
+        setForm(payload);
+        try {
+            setLoading(true);
+            setError(null);
+            const res = await loginUser(payload);
+            
+            if (res?.data?.token) {
+                saveToken(res.data.token);
+                localStorage.setItem("token", res.data.token);
+                localStorage.setItem("user_token", res.data.token);
+            }
+            window.location.href = "/admin";
+        } catch (err) {
+            setError(err.response?.data?.message || "Admin login failed.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // ✅ Quick Student Login Handler
+    const handleQuickStudentLogin = async () => {
+        const payload = { email: "student@coursemaster.com", password: "student123" };
+        setForm(payload);
+        try {
+            setLoading(true);
+            setError(null);
+            const res = await loginUser(payload);
+            
+            if (res?.data?.token) {
+                saveToken(res.data.token);
+                localStorage.setItem("token", res.data.token);
+                localStorage.setItem("user_token", res.data.token);
+            }
+            window.location.href = "/student";
+        } catch (err) {
+            setError(err.response?.data?.message || "Student login failed.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -28,8 +68,12 @@ export default function Login() {
             const res = await loginUser(form);
             saveToken(res.data.token);
 
-            navigate("/");
-            window.location.reload();
+            const userRole = res.data?.user?.role;
+            if (userRole === "admin") {
+                window.location.href = "/admin";
+            } else {
+                window.location.href = "/student";
+            }
         } catch (err) {
             setError(err.response?.data?.message || "Login failed. Please check your credentials.");
         } finally {
@@ -68,14 +112,14 @@ export default function Login() {
                         <div className="grid grid-cols-2 gap-2">
                             <button
                                 type="button"
-                                onClick={() => handleQuickLogin("admin@coursemaster.com", "admin123")}
+                                onClick={handleQuickAdminLogin}
                                 className="btn btn-xs btn-outline btn-primary gap-1 font-semibold"
                             >
                                 <ShieldCheck className="w-3 h-3" /> Admin Fill
                             </button>
                             <button
                                 type="button"
-                                onClick={() => handleQuickLogin("student@coursemaster.com", "student123")}
+                                onClick={handleQuickStudentLogin}
                                 className="btn btn-xs btn-outline btn-secondary gap-1 font-semibold"
                             >
                                 <UserCheck className="w-3 h-3" /> Student Fill
@@ -95,8 +139,7 @@ export default function Login() {
                                         localStorage.setItem("token", token);
                                         localStorage.setItem("user_token", token);
                                         localStorage.setItem("dev_bypass", "true");
-                                        navigate("/student");
-                                        window.location.reload();
+                                        window.location.href = "/student";
                                     }}
                                     className="btn btn-xs btn-primary font-bold text-xs"
                                 >
@@ -109,8 +152,7 @@ export default function Login() {
                                         localStorage.setItem("token", token);
                                         localStorage.setItem("user_token", token);
                                         localStorage.setItem("dev_bypass", "true");
-                                        navigate("/admin");
-                                        window.location.reload();
+                                        window.location.href = "/admin";
                                     }}
                                     className="btn btn-xs btn-secondary font-bold text-xs"
                                 >

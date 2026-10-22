@@ -37,7 +37,7 @@ export default function CourseCard({ course }) {
                     </h2> */}
 
 
-                    <h2 className="card-title text-base sm:text-lg font-bold leading-tight group-hover:text-primary transition-colors line-clamp-2 min-h-[3rem]">
+                    <h2 className="card-title text-base sm:text-lg font-bold leading-tight group-hover:text-primary transition-colors line-clamp-3 min-h-[3rem]">
                         {course.title}
                     </h2>
 
