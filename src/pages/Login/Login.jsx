@@ -115,7 +115,7 @@ export default function Login() {
                         </div>
 
                         {/* Dev shortcut: shudhu development e dekhabe, production e na */}
-                        {import.meta.env.DEV && (
+                        {/* {import.meta.env.DEV && (
                             <div className="pt-2 border-t border-base-300/80">
                                 <p className="text-[11px] font-semibold text-base-content/70 mb-1.5">
                                     🔓 Direct Login & Inspect Routes (Dev Bypass):
@@ -139,7 +139,30 @@ export default function Login() {
                                     </button>
                                 </div>
                             </div>
-                        )}
+                        )} */}
+                        <div className="pt-2 border-t border-base-300/80">
+        <p className="text-[11px] font-semibold text-base-content/70 mb-1.5">
+            🔓 Direct Login & Inspect Routes (Dev Bypass):
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+            <button
+                type="button"
+                disabled={loading}
+                onClick={() => handleQuickLogin(DEMO_USERS.student)}
+                className="btn btn-xs btn-primary font-bold text-xs"
+            >
+                🎓 Student Portal
+            </button>
+            <button
+                type="button"
+                disabled={loading}
+                onClick={() => handleQuickLogin(DEMO_USERS.admin)}
+                className="btn btn-xs btn-secondary font-bold text-xs"
+            >
+                👑 Admin Portal
+            </button>
+        </div>
+    </div>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
