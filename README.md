@@ -1,8 +1,5 @@
 # CourseMaster - Frontend
-Live Link: https://course-master4981.netlify.app/
-
-Video link: https://drive.google.com/file/d/1vjMrBxr0-7xqjxMX2EBEBw30D_av1pOu/view
-
+Live Link: https://stnb-7-bug-fix-frontend.vercel.app/
 A modern E-learning platform frontend built with React, Redux Toolkit, and Tailwind CSS.
 
 Admin email: admin@coursemaster.com
