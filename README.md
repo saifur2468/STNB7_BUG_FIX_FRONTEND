@@ -1,5 +1,7 @@
 # CourseMaster - Frontend
 Live Link: https://stnb-7-bug-fix-frontend.vercel.app/
+
+
 A modern E-learning platform frontend built with React, Redux Toolkit, and Tailwind CSS.
 
 Admin email: admin@coursemaster.com
